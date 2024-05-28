@@ -9,7 +9,7 @@ cursor = connection.cursor()
 def add_tables():
     cursor.execute("CREATE TABLE IF NOT EXISTS students (id TEXT NOT NULL, name TEXT, gender TEXT, year TEXT NOT NULL, course TEXT NOT NULL)")
     connection.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS courses (id TEXT NOT NULL, name TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS courses (code TEXT NOT NULL, name TEXT NOT NULL)")
     connection.commit()
     
 add_tables()
@@ -46,7 +46,7 @@ def get_courses_by_text(search):
     return final_rows
 
 window = tk.Tk()
-#window.resizable(False, False)
+window.title("Simple Student Information System SQL")
 
 course_buttons = ttk.Frame(window)
 
@@ -118,7 +118,7 @@ def edit_course_command():
     def save_course():
         course_id = course_id_entry.get()
         final_course_name = course_name_entry.get()
-        cursor.execute("UPDATE courses SET name = ? WHERE id = ?", (final_course_name, course_id))
+        cursor.execute("UPDATE courses SET name = ? WHERE code = ?", (final_course_name, course_id))
         connection.commit()
         populate_course_table(get_all_courses())
         message_box("Course Successfully updated!")
@@ -166,7 +166,7 @@ edit_course.pack(side = LEFT, padx = 10)
 def course_delete_button():
     
     def delete_command():
-        cursor.execute("DELETE FROM courses WHERE id = ?", (course_code,))
+        cursor.execute("DELETE FROM courses WHERE code = ?", (course_code,))
         populate_course_table(get_all_courses())
         populate_student_table(get_all_students())
         course_window.destroy()
@@ -238,7 +238,7 @@ def populate_student_table(rows):
     student_table.delete(*student_table.get_children())
     if not len(rows):
         return 
-    cursor.execute("SELECT id FROM courses")
+    cursor.execute("SELECT code FROM courses")
     courses = cursor.fetchall()
     courses = [course[0] for course in courses] # flatten the list
     for index, student in enumerate(rows):
@@ -247,7 +247,7 @@ def populate_student_table(rows):
         else:
             rows[index].append("ENROLLED")
     for idx, row in enumerate(rows):
-        student_table.insert('', values = (row[0], row[1], row[2], row[3], row[4], row[5]), index = idx)
+        student_table.insert('', values = (row[0], row[1], row[2].upper(), row[3], row[4], row[5]), index = idx)
         
 def get_all_students():
     cursor.execute("SELECT * FROM students")
