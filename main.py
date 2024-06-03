@@ -63,13 +63,13 @@ def new_course_window():
         if not len(course_id_entry.get()) or not len(course_name_entry.get()):
             message_box("There are some missing fields milord.")
             return
-        cursor.execute("SELECT * FROM courses WHERE id = ?", (course_id_entry.get(),))
+        cursor.execute("SELECT * FROM courses WHERE code = ?", (course_id_entry.get(),))
         result = cursor.fetchone()
         if result is not None:
             message_box("Course already exists!")
             return
         
-        cursor.execute("INSERT INTO courses (id, name) VALUES (?, ?)", (course_id_entry.get().upper(), course_name_entry.get().upper()))
+        cursor.execute("INSERT INTO courses (code, name) VALUES (?, ?)", (course_id_entry.get().upper(), course_name_entry.get().upper()))
         connection.commit()
         
         course_window.destroy()
