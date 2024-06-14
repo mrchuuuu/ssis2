@@ -69,7 +69,7 @@ def new_course_window():
             message_box("Course already exists!")
             return
         
-        cursor.execute("INSERT INTO courses (code, name) VALUES (?, ?)", (course_id_entry.get().upper(), course_name_entry.get().upper()))
+        cursor.execute("INSERT INTO courses (code, name) VALUES (?, ?)", (course_id_entry.get().upper(), course_name_entry.get()))
         connection.commit()
         
         course_window.destroy()
@@ -298,7 +298,7 @@ def new_student():
         if not len(course):
             course = "N/A"
         cursor.execute("INSERT INTO students (id, name, gender, year, course) VALUES (?, ?, ?, ?, ?)",
-                       (id.upper(), name.upper(), gender.upper(), year_level.upper(), course.upper()))
+                       (id.upper(), name, gender.upper(), year_level, course.upper()))
         connection.commit()
         student_window.destroy()
         message_box("Successfully added a student!")
