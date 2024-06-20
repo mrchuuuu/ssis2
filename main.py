@@ -243,6 +243,7 @@ def populate_student_table(rows):
     courses = [course[0] for course in courses] # flatten the list
     for index, student in enumerate(rows):
         if not student[4] in courses:
+            rows[index][4] = "N/A"
             rows[index].append("NOT ENROLLED")
         else:
             rows[index].append("ENROLLED")
